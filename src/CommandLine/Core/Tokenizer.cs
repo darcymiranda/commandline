@@ -19,9 +19,9 @@ namespace CommandLine.Core
             Action<Error> onError = e => errors.Add(e);
 
             var tokens = from arg in arguments
-                         from token in !arg.StartsWith("-", StringComparison.Ordinal)
+                         from token in !arg.StartsWith("/", StringComparison.Ordinal)
                                ? new Token[] { Token.Value(arg) }
-                               : arg.StartsWith("--", StringComparison.Ordinal)
+                               : arg.StartsWith("//", StringComparison.Ordinal)
                                      ? TokenizeLongName(arg, onError)
                                      : TokenizeShortName(arg, nameLookup)
                          select token;
@@ -37,10 +37,10 @@ namespace CommandLine.Core
         {
             if (arguments == null) throw new ArgumentNullException("arguments");
 
-            if (arguments.Any(arg => arg.EqualsOrdinal("--")))
+            if (arguments.Any(arg => arg.EqualsOrdinal("//")))
             {
-                var tokenizerResult = tokenizer(arguments.TakeWhile(arg => !arg.EqualsOrdinal("--")));
-                var values = arguments.SkipWhile(arg => !arg.EqualsOrdinal("--")).Skip(1).Select(t => Token.Value(t));
+                var tokenizerResult = tokenizer(arguments.TakeWhile(arg => !arg.EqualsOrdinal("//")));
+                var values = arguments.SkipWhile(arg => !arg.EqualsOrdinal("//")).Skip(1).Select(t => Token.Value(t));
                 return tokenizerResult.MapValue(tokens => tokens.Concat(values));
             }
             return tokenizer(arguments);
@@ -55,7 +55,7 @@ namespace CommandLine.Core
                 throw new ArgumentNullException("value");
             }
 
-            if (value.Length > 1 || value[0] == '-' || value[1] != '-')
+            if (value.Length > 1 || value[0] == '/' || value[1] != '/')
             {
                 var text = value.Substring(1);
 
@@ -105,7 +105,7 @@ namespace CommandLine.Core
                 throw new ArgumentNullException("value");
             }
 
-            if (value.Length > 2 && value.StartsWith("--", StringComparison.Ordinal))
+            if (value.Length > 2 && value.StartsWith("//", StringComparison.Ordinal))
             {
                 var text = value.Substring(2);
                 var equalIndex = text.IndexOf('=');

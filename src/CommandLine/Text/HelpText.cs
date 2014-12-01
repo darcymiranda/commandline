@@ -573,7 +573,7 @@ namespace CommandLine.Text
             {
                 if (this.addDashesToOption)
                 {
-                    optionName.Append('-');
+                    optionName.Append('/');
                 }
 
                 optionName.AppendFormat("{0}", option.ShortName);
@@ -593,7 +593,7 @@ namespace CommandLine.Text
             {
                 if (this.addDashesToOption)
                 {
-                    optionName.Append("--");
+                    optionName.Append("//");
                 }
 
                 optionName.AppendFormat("{0}", option.LongName);
